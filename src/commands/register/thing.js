@@ -24,14 +24,22 @@ async function createThing(client, device, options) {
       version: '2.0.0',
       whitelists: {
         discover: {
-          // Allow the router to view the thing
-          // Required to allow gateways, apps and user to list things
-          view: [{ uuid: device.knot.router }],
+          view: [
+            // Allow the router to view the thing
+            // Required to allow apps to list things
+            { uuid: device.knot.router },
+            // Allow the device (gateway or user) to view the thing
+            { uuid: device.uuid },
+          ],
         },
         configure: {
-          // Allow the router to update the thing
-          // Required to allow gateways, apps and user to update things
-          update: [{ uuid: device.knot.router }],
+          update: [
+            // Allow the router to update the thing
+            // Required to allow apps to update things
+            { uuid: device.knot.router },
+            // Allow the device (gateway or user) to update the thing
+            { uuid: device.uuid },
+          ],
         },
         broadcast: {
           // Allow the router to receive broadcasts from the thing
@@ -50,6 +58,9 @@ async function createThing(client, device, options) {
   if (device.type === 'gateway') {
     // Associates this thing with a gateway
     params.knot.gateways.push(device.uuid);
+    // Add the user to discover and update whitelists, as the gateway was added above
+    params.meshblu.whitelists.discover.view.push({ uuid: device.knot.user });
+    params.meshblu.whitelists.configure.update.push({ uuid: device.knot.user });
   }
   return client.registerAsync(params);
 }
