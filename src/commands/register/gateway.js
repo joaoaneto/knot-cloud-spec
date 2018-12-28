@@ -19,6 +19,7 @@ async function createGateway(client, user, options) {
       name: options.name,
     },
     knot: {
+      user: user.uuid, // Saved for easy access when creating things
       router: user.knot.router, // Saved for easy access when creating things
       active: options.active, // To indicate a gateway hardware is using these credentials
     },
@@ -32,7 +33,7 @@ async function createGateway(client, user, options) {
         },
         configure: {
           // Allow user to update the gateway
-          // Required when updating the gateway or creating its subscriptions
+          // Required when updating the gateway
           update: [{ uuid: user.uuid }],
         },
       },
@@ -62,9 +63,9 @@ async function givePermission(client, from, to, type, as) {
 }
 
 async function connectRouterToGateway(client, user, gateway) {
-  // Allow the gateway to discover and update as if it was the router, so it can access the things
-  await givePermission(client, user.knot.router, gateway.uuid, 'discover.as', user.uuid);
-  await givePermission(client, user.knot.router, gateway.uuid, 'configure.as', user.uuid);
+  // Allow the gateway to update the router
+  // Required to create things (update router's whitelists)
+  await givePermission(client, user.knot.router, gateway.uuid, 'configure.update', user.uuid);
 }
 
 async function registerGateway(argv) {
