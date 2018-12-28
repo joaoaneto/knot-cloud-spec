@@ -20,17 +20,11 @@ async function createRouter(client, user) {
           // Allow the user to view the router
           // Required to update the router's whitelists when creating other devices
           view: [{ uuid: user.uuid }],
-          // Allow the user to discover the devices the router knows
-          // Required to view the devices the user owns
-          as: [{ uuid: user.uuid }],
         },
         configure: {
           // Allow the user to update the router
           // Required to setup subscriptions and update whitelists when creating other devices
           update: [{ uuid: user.uuid }],
-          // Allow the user to configure the devices the router knows
-          // Required to update the devices the user owns
-          as: [{ uuid: user.uuid }],
         },
       },
     },
