@@ -82,6 +82,11 @@ async function connectRouterToApp(client, user, app) {
   // Allow the app to send messages as the router
   // Required to send commands ('set_data', 'get_data', 'set_config', 'get_config') to things
   await givePermission(client, user.knot.router, app.uuid, 'message.as', user.uuid);
+
+  // Allow the app to discover and update as if it was the router
+  // Required to list and ...?
+  await givePermission(client, user.knot.router, app.uuid, 'discover.as', user.uuid);
+  await givePermission(client, user.knot.router, app.uuid, 'configure.as', user.uuid);
 }
 
 async function registerApp(argv) {
